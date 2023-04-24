@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: Nunito, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    color: #111927;
+}
+
+p {
+    margin: 0;
+}
+
+button {
+    display: inline-block;
+    border: 2px solid #111927;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #111927;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+
+}
+
+button:hover {
+    background-color: #111927;
+    color: #fff;
+    cursor: pointer;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    min-width: 200px;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.05) 0px 0px 0px 0.5px;
+}
+
+.card>.title {
+    color: #6C737F;
+    margin-bottom: 8px;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.list li {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.list a {
+    color: #333;
+    display: block;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.list li:hover {
+    background-color: #f8f9fa;
+}
+
+.list .date {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.list .message-count {
+    background-color: #ddd;
+    border-radius: 50%;
+    color: #333;
+    display: inline-block;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    margin-left: 10px;
+    text-align: center;
+    width: 24px;
+}
+
+#update {
+    margin-top: 20px;
+    max-width: 860px;
+}
+#update-button {
+    margin-top: 10px;
+}
+
+#chats,
+#reports {
+    min-width: 420px;
+}

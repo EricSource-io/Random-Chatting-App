@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaddleTalk - Admin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Dashboard - WaddleTalk</h1>
+    <div class="card" id="update">
+        <h4 class="title">Update</h4>
+        <p>Last: (Deactivated)</p>
+        <p>Interval: (Deactivated)</p>
+        <button id="update-button">Update</button>
+
+    </div>
+    <div class="card-container" style="margin: 20px 0">
+        <div class="card" id="client-stats">
+            <h4 class="title">Clients</h4>
+            <h1 class="data"> Offline </h1>
+        </div>
+        <div class="card" id="room-stats">
+            <h4 class="title"> Rooms</h4>
+            <h1 class="data"> Offline </h1>
+        </div>
+        <div class="card" id="message-stats">
+            <h4 class="title">Messages</h4>
+            <h1 class="data"> Offline </h1>
+        </div>
+        <div class="card" id="image-stats">
+            <h4 class="title">Images</h4>
+            <h1 class="data"> Offline </h1>
+        </div>
+
+    </div>
+    <div class="card-container">
+        <div class="card" id="chats">
+            <h4 class="title">Chats (Deactivated)</h4>
+            <ul class="list">
+                <li>
+                    <a href="#">
+                        Chat 1
+                        <span class="date">April 1, 2023</span>
+                        <span class="message-count">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Chat 2
+                        <span class="date">March 31, 2023</span>
+                        <span class="message-count">10</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Chat 3
+                        <span class="date">March 30, 2023</span>
+                        <span class="message-count">2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Chat 4
+                        <span class="date">March 29, 2023</span>
+                        <span class="message-count">5</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card" id="reports">
+            <h4 class="title">Reports (Deactivated)</h4>
+            <ul class="list">
+
+            </ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

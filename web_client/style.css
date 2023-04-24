@@ -1,0 +1,90 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  background-color: #f5f5f5;
+}
+
+header {
+  background-color: #2f2f2f;
+  color: #fff;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.chat-container {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chat-log {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.chat-input input[type="text"] {
+  flex: 1;
+  margin-right: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #2f2f2f;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.chat-input button:hover {
+  background-color: #333;
+}
+
+.cancel-btn {
+  background-color: #FF3A3A;
+  margin-left: 10px;
+}
+
+.cancel-btn:hover {
+  background-color: #FF5E5E;
+}

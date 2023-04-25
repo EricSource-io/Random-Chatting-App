@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES, PORT } from "./constants.js";
-=======
 import ip from "ip";
 import { WebSocketServer } from 'ws';
 import { randomUUID } from "crypto";
 import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES } from "./constants.js";
-import { isBucketEmpty, addTokensAtRate } from "./utils/limiter.js";
+import { isBucketEmpty, addTokensAtRate, clearTokenBucketInterval } from "./utils/limiter.js";
 import { safeParseJSON } from './utils/parse.js';
->>>>>>> b1c0c61cf3fb70af133f013597719c62344f843d
 import StreamHandler from "./handlers/streamHandler.js";
 import RoomHandler from "./handlers/roomHandler.js";
 import AdminDashboard from "./handlers/adminDashboardHandler.js";
@@ -81,38 +78,40 @@ function heartbeat (ws) {
     ws.isAlive = false;
     ws.ping('', false);
   }, 3000); // send a ping every 3 seconds
-  //on message from client
-
   return interval;
 }
 
 
 
-// Creating connection using websocket
+// Creating connection using WebSocket
 wss.on("connection", ws => {
-  const interval = heartbeat(ws);
+  // Set up a heartbeat interval for the WebSocket connection
+  const heartbeatInterval = heartbeat(ws);
   console.log(`Client connected from ${ws._socket.remoteAddress}`);
 
+  // Initialize streaming related properties for the WebSocket
   ws.isStreaming = false;
-  ws.stream = {
-    type: "",
-    contentLength: 0
-  };
+  ws.stream = { type: "", contentLength: 0 };
 
+  // Add token bucket functionality to the WebSocket
   addTokensAtRate(ws);
 
+  // Handle incoming messages from the WebSocket
   ws.on("message", async buffer => {
     if (ws.isStreaming) {
       console.log("stream");
       StreamHandler.onStream(ws, buffer);
       return;
     }
-
+    // Parse the incoming JSON message
     const event = safeParseJSON(buffer);
     if (!event) return; // Error parsing JSON
     console.log(event.type)
+
+    // Check if the WebSocket's token bucket is empty
     if (isBucketEmpty(ws)) {
-<<<<<<< HEAD
+
+      // Send an error message to the WebSocket if the token bucket is empty
       const errorMessage = JSON.stringify({
         type: "ERROR",
         data: {
@@ -121,18 +120,19 @@ wss.on("connection", ws => {
       });
       const errorString = JSON.stringify(errorMessage);
       ws.emit(errorString);
-=======
+
       sendError(ws, ERROR_TYPES.RATE_LIMIT_EXCEEDED);
->>>>>>> b1c0c61cf3fb70af133f013597719c62344f843d
       return;
     }
+
+    // Decrement the token bucket by one for each message received
     ws.tokenBucket -= 1;
 
-
-
+    // Handle the incoming message from an admin WebSocket
     if (AdminDashboard.ws === ws) {
       if (event.type === MESSAGE_TYPES.ADMIN.GET_STATS) {
-        AdminDashboard.stats.clients = wss.clients.size; // Update client count before sending stats
+        // Update the number of connected clients before sending stats
+        AdminDashboard.stats.clients = wss.clients.size;
         AdminDashboard.sendStats();
         return;
       }
@@ -141,57 +141,50 @@ wss.on("connection", ws => {
     const TYPE = MESSAGE_TYPES.CLIENT;
 
     switch (event.type) {
-<<<<<<< HEAD
-
-=======
-      case TYPE.AUTHENTICATION:
-        // Currently only accepting auth as admin
-        const auth = event.data.auth;
-        const isValid = AdminDashboard.isAuthValid(auth);
-        if (isValid) {
-          AdminDashboard.ws = ws;
-          AdminDashboard.sendAuthSuccess();
-        }
-        break;
-      // -----------------------------------------------
->>>>>>> b1c0c61cf3fb70af133f013597719c62344f843d
       case TYPE.JOIN_WAITING_LIST:
+        // Join client to the waiting list
         joinWaitingList(ws, event.data);
         break;
-      // -----------------------------------------------
       case TYPE.LEAVE_WAITING_LIST:
+        // Remove client from the waiting list
         leaveWaitingList(ws);
         break;
-      // -----------------------------------------------
       case TYPE.LEAVE_ROOM:
+        // Client leaves the chat room
         RoomHandler.leaveChatRoom(ws, event.data.roomId);
         break;
-      // -----------------------------------------------
       case MESSAGE_TYPES.CHAT_MESSAGE:
+        // Handle incoming chat messages
         const roomId = event.data.roomId;
         const chatRoom = RoomHandler.rooms.get(roomId);
+
         if (!chatRoom) {
           //! No chat room associated with this roomId
           return;
         }
         const otherClient = chatRoom.find(c => c.ws !== ws);
+
         if (!otherClient) {
+          // Client not found in the chat room, leave the chat room
           RoomHandler.leaveChatRoom(ws, roomId);
           return;
         }
+
         // Check if the chat message is an image stream
         if (event.data.type === MESSAGE_DATA_TYPES.IMAGE_STREAM_HEADER) {
 
           const contentLength = event.data.contentLength;
           console.log(contentLength, StreamHandler.imageSizeLimit)
+
           if (contentLength > StreamHandler.imageSizeLimit) {
-            //sendError(ws, ERROR_TYPES.IMAGE_SIZE_LIMIT_EXCEEDED);
-             //! Somehow the Websocket cant handle sending a stream and receiving a message at the same time
-             //? Can be fixed by sending image as a series of chunks! (_sendImage())
-             //! Currently the app checks if the image size is accepted locally inside _sendImage and here it just gets ignored without sending a warning
+            // Image size exceeds limit, ignore the message
+            // The Websocket can't handle sending a stream and receiving a message at the same time
+            // Sending image as a series of chunks can fix this (in _sendImage())
+            // *sendError(ws, ERROR_TYPES.IMAGE_SIZE_LIMIT_EXCEEDED);
             return;
           }
 
+          // Increment the image count and set stream data
           AdminDashboard.stats.images += 1;
           ws.isStreaming = true;
           ws.stream = {
@@ -199,13 +192,13 @@ wss.on("connection", ws => {
             contentLength: contentLength
           }
         } else {
+          // Increment the message count and send the chat message as usual
           AdminDashboard.stats.messages += 1;
-          // If the chat message is not an image stream, send it as usual
           sendChatMessage(otherClient.ws, event.data.content);
           ChatLogger.addMessage(roomId, ws, MESSAGE_DATA_TYPES.TEXT, event.data.content);
         }
         break;
-      // -----------------------------------------------
+      // Unknown message type, log it for debugging
       default: console.log(event);
     }
   });
@@ -220,7 +213,8 @@ wss.on("connection", ws => {
     }
     // If the disconnected client was in a chat room, remove the chat room and notify the other client.
     RoomHandler.leaveChatRoom(ws);
-    clearInterval(interval);
+    clearTokenBucketInterval(ws.tokenBucket.interval);
+    clearInterval(heartbeatInterval);
   });
 
   // handling client connection error

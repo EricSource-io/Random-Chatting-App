@@ -141,6 +141,12 @@ wss.on("connection", ws => {
     const TYPE = MESSAGE_TYPES.CLIENT;
 
     switch (event.type) {
+      case TYPE.AUTHENTICATION:
+        if(AdminDashboard.isAuthValid(event.data.auth)){
+          AdminDashboard.ws = ws;
+          AdminDashboard.sendAuthSuccess();
+        }
+      break;
       case TYPE.JOIN_WAITING_LIST:
         // Join client to the waiting list
         joinWaitingList(ws, event.data);

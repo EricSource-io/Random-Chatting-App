@@ -2,8 +2,8 @@ const chatLog = document.getElementById("chat-log");
 const sendBtn = document.getElementById("send");
 const cancelBtn = document.getElementById("cancel");
 const input = document.getElementById("input");
-const ws = new WebSocket("ws://localhost:6565");
-//const ws = new WebSocket("ws://192.168.2.182:6565");
+//const ws = new WebSocket("ws://localhost:6565");
+const ws = new WebSocket("ws://192.168.2.182:6565");
 let imageStream = {
   contentLength: 0,
   data: [] // chunks

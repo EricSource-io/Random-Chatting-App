@@ -2,7 +2,6 @@ import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES, PORT } from "./constant
 import ip from "ip";
 import { WebSocketServer } from 'ws';
 import { randomUUID } from "crypto";
-import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES } from "./constants.js";
 import { isBucketEmpty, addTokensAtRate, clearTokenBucketInterval } from "./utils/limiter.js";
 import { safeParseJSON } from './utils/parse.js';
 import StreamHandler from "./handlers/streamHandler.js";
@@ -13,6 +12,7 @@ import ChatLogger from "./chatLogger.js";
 ChatLogger.config.logging = false;
 
 // Creating a new websocket server
+console.log(PORT)
 const wss = new WebSocketServer({ port: PORT });
 
 const waitingClients = [];
@@ -77,7 +77,7 @@ function heartbeat (ws) {
     if (ws.isAlive === false) return ws.terminate();
     ws.isAlive = false;
     ws.ping('', false);
-  }, 3000); // send a ping every 3 seconds
+  }, 5000); // send a ping every 5 seconds
   return interval;
 }
 
@@ -126,7 +126,7 @@ wss.on("connection", ws => {
     }
 
     // Decrement the token bucket by one for each message received
-    ws.tokenBucket -= 1;
+    ws.tokenBucket.tokens -= 1;
 
     // Handle the incoming message from an admin WebSocket
     if (AdminDashboard.ws === ws) {
@@ -227,7 +227,7 @@ wss.on("connection", ws => {
 wss.on("error", error => console.log(`Some Error occurred! ${error}`))
 
 
-console.log(`The WebSocket server is running on ws://${ip.address()}:${port}`);
+//console.log(`The WebSocket server is running on ws://${ip.address()}:${port}`);
 
 
 

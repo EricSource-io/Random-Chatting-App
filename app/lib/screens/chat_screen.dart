@@ -233,12 +233,11 @@ class _ChatScreenState extends State<ChatScreen> {
     final file = File(imagePath);
     final length = await file.length();
 
-    const imageSizeLimit = 1024 * 1024 * 8; //8mb
+    const imageSizeLimit = 1024 * 1024 * 6; //6mb
     if (length > imageSizeLimit) {
-      //! This is currently just a workaround! More information on serverside
       setState(() {
         messages.add(Message(
-            data: "Image size is too big. Max 8 MB allowed.",
+            data: "Image size is too big. Max 6 MB allowed.",
             sender: MessageSender.system,
             type: MessageDataType.text));
       });
@@ -443,7 +442,6 @@ class _ChatScreenState extends State<ChatScreen> {
           );
         },
         child: Container(
-          height: 300,
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Row(
             mainAxisAlignment: message.sender == MessageSender.currentUser
@@ -451,22 +449,27 @@ class _ChatScreenState extends State<ChatScreen> {
                 : MainAxisAlignment.start,
             children: [
               message.sender == MessageSender.currentUser
-                  ? const SizedBox(width: 45.0)
+                  ? const SizedBox(width: 85.0)
                   : Container(),
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20.0),
-                  topRight: const Radius.circular(20.0),
-                  bottomLeft: message.sender == MessageSender.currentUser
-                      ? const Radius.circular(20.0)
-                      : const Radius.circular(0.0),
-                  bottomRight: message.sender == MessageSender.currentUser
-                      ? const Radius.circular(0.0)
-                      : const Radius.circular(20.0),
-                ),
-                child: Image.memory(
-                  imageBuffer,
-                  fit: BoxFit.cover,
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20.0),
+                      topRight: const Radius.circular(20.0),
+                      bottomLeft: message.sender == MessageSender.currentUser
+                          ? const Radius.circular(20.0)
+                          : const Radius.circular(0.0),
+                      bottomRight: message.sender == MessageSender.currentUser
+                          ? const Radius.circular(0.0)
+                          : const Radius.circular(20.0),
+                    ),
+                    child: Image.memory(
+                      imageBuffer,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
               message.sender == MessageSender.currentUser

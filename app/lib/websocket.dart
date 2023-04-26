@@ -6,7 +6,7 @@ import 'dart:typed_data';
 class MyWebSocket {
   static Completer<WebSocket> _completer = Completer<WebSocket>();
   static const String _url = "ws://waddletalk.servehttp.com:6565";
-  static const int _pingSeconds = 3;
+  static const int _pingSeconds = 5;
   static const int _timeoutSeconds = 5;
   static bool isConnected = false;
   static Function onDisconnect = () {};
@@ -70,6 +70,7 @@ class MyWebSocket {
     }
   }
 
+  // ! currently not used!
   static void stream(
       List<Uint8List> chunks, String initialPayload, String finalPayload) {
     ws.then((socket) {

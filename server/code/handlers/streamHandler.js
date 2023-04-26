@@ -33,12 +33,6 @@ export default class StreamHandler {
         newBuffer.set(data, ws.iBuffer.length);
         ws.iBuffer = newBuffer;
 
-        // Send chunks of data until the input buffer is smaller than the chunk size
-        while (ws.iBuffer.length >= this.imageChunkSize) {
-            const chunk = ws.iBuffer.slice(0, this.imageChunkSize);
-            ws.iBuffer = ws.iBuffer.slice(this.imageChunkSize);
-            this.sendImageChunk(ws, chunk);
-        }
 
         // If the input buffer size is equal to or larger than the expected content length
         if (ws.iBuffer.length >= ws.stream.contentLength) {

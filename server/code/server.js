@@ -99,7 +99,6 @@ wss.on("connection", ws => {
   // Handle incoming messages from the WebSocket
   ws.on("message", async buffer => {
     if (ws.isStreaming) {
-      console.log("stream");
       StreamHandler.onStream(ws, buffer);
       return;
     }

@@ -12,8 +12,8 @@ const updateButton = document.getElementById("update-button");
 const statsList = document.getElementById("stats");
 
 
-const ws = new WebSocket("ws://localhost:6565");
-//const ws = new WebSocket("ws://192.168.2.182:6565");
+//const ws = new WebSocket("ws://localhost:6565");
+const ws = new WebSocket("ws://192.168.2.182:6565");
 let isAuth = false;
 
 const request = {

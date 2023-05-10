@@ -1,0 +1,19 @@
+{
+  "name": "chat_ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "openai": "^3.2.1",
+    "puppeteer": "^20.1.2",
+    "readline-sync": "^1.4.10",
+    "ws": "^8.13.0"
+  }
+}

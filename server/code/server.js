@@ -1,13 +1,18 @@
-import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES, PORT } from "./constants.js";
-import ip from "ip";
+import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES, PORT } from './constants.js';
+import ip from 'ip';
 import { WebSocketServer } from 'ws';
-import { randomUUID } from "crypto";
-import { isBucketEmpty, addTokensAtRate, clearTokenBucketInterval } from "./utils/limiter.js";
+import { randomUUID } from 'crypto';
+import { isBucketEmpty, addTokensAtRate, clearTokenBucketInterval } from './utils/limiter.js';
 import { safeParseJSON } from './utils/parse.js';
-import StreamHandler from "./handlers/streamHandler.js";
-import RoomHandler from "./handlers/roomHandler.js";
-import AdminDashboard from "./handlers/adminDashboardHandler.js";
-import ChatLogger from "./chatLogger.js";
+import * as dotenv from 'dotenv';
+import StreamHandler from './handlers/streamHandler.js';
+import RoomHandler from './handlers/roomHandler.js';
+import AdminDashboard from './handlers/adminDashboardHandler.js';
+import ChatLogger from './chatLogger.js';
+
+
+dotenv.config();
+AdminDashboard.API_KEY = process.env.WADDLETALK_API_KEY;
 
 ChatLogger.config.logging = false;
 
@@ -20,7 +25,7 @@ const waitingClients = [];
 function joinWaitingList (ws, data) {
   const client = {
     ws: ws,
-    name: data.username.trim() !== '' ? data.username : "Stranger"
+    name: data.username.trim() !== '' ? data.username : 'Stranger'
   };
   waitingClients.push(client);
 
@@ -63,7 +68,7 @@ function sendChatMessage (ws, content) {
 
 function sendError (ws, errorType, info = null) {
   const errorMessage = {
-    type: "ERROR",
+    type: 'ERROR',
     error: { type: errorType, info: info },
   };
   const errorString = JSON.stringify(errorMessage);
@@ -81,23 +86,21 @@ function heartbeat (ws) {
   return interval;
 }
 
-
-
 // Creating connection using WebSocket
-wss.on("connection", ws => {
+wss.on('connection', ws => {
   // Set up a heartbeat interval for the WebSocket connection
   const heartbeatInterval = heartbeat(ws);
   console.log(`Client connected from ${ws._socket.remoteAddress}`);
 
   // Initialize streaming related properties for the WebSocket
   ws.isStreaming = false;
-  ws.stream = { type: "", contentLength: 0 };
+  ws.stream = { type: '', contentLength: 0 };
 
   // Add token bucket functionality to the WebSocket
   addTokensAtRate(ws);
 
   // Handle incoming messages from the WebSocket
-  ws.on("message", async buffer => {
+  ws.on('message', async buffer => {
     if (ws.isStreaming) {
       StreamHandler.onStream(ws, buffer);
       return;
@@ -112,7 +115,7 @@ wss.on("connection", ws => {
 
       // Send an error message to the WebSocket if the token bucket is empty
       const errorMessage = JSON.stringify({
-        type: "ERROR",
+        type: 'ERROR',
         data: {
           type: ERROR_TYPES.RATE_LIMIT_EXCEEDED
         }
@@ -209,7 +212,7 @@ wss.on("connection", ws => {
   });
 
   // handling what to do when clients disconnects from server
-  ws.on("close", () => {
+  ws.on('close', () => {
     const index = waitingClients.findIndex(c => c.ws === ws);
     if (index !== -1) {
       // If the disconnected client was in the waiting list, remove it from the list and return.
@@ -224,12 +227,12 @@ wss.on("connection", ws => {
 
   // handling client connection error
   ws.onerror = () => {
-    console.log("Some Error occurred!");
+    console.log('Some Error occurred!');
     sendError(ws, ERROR_TYPES.INTERNAL_SERVER_ERROR);
   }
 });
 
-wss.on("error", error => console.log(`Some Error occurred! ${error}`))
+wss.on('error', error => console.log(`Some Error occurred! ${error}`))
 
 
 //console.log(`The WebSocket server is running on ws://${ip.address()}:${port}`);

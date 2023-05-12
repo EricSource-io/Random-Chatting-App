@@ -1,11 +1,11 @@
-import fs from "fs";
-import { MESSAGE_DATA_TYPES } from "./constants.js";
+import fs from 'fs';
+import { MESSAGE_DATA_TYPES } from './constants.js';
 
 export default class ChatLogger {
     // Set up the default configuration options for the chat logger
     static config = {
         logging: false,
-        savePath: "./logs",
+        savePath: './logs',
         delimiter: ';',
         keepText: false,
         keepImage: false,
@@ -69,16 +69,16 @@ export default class ChatLogger {
         if (false /*When chat was reported*/) {
             // Get the chat room and create a CSV string of its messages
             const chatRoom = this.chatRooms.get(roomID);
-            let data = "";
+            let data = '';
             const d = this.config.delimiter;
             chatRoom.messages.forEach(message => {
-                const sender = message.sender.replace(d, "");
+                const sender = message.sender.replace(d, '');
                 let content = message.content;
                 if (message.type === MESSAGE_DATA_TYPES.TEXT) {
-                    content = content.replace(d, "");
+                    content = content.replace(d, '');
                 }
                 const type = message.type;
-                data += `"${sender}"${d} "${type}"${d} ${d}"${content}"}\n`;
+                data += `'${sender}'${d} '${type}'${d} ${d}'${content}'}\n`;
             });
             
             // Save the chat log to a CSV file if there are any messages

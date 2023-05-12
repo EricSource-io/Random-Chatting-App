@@ -1,5 +1,6 @@
-import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES } from "../constants.js";
-import RoomHandler from "./roomHandler.js";
+import { MESSAGE_TYPES, MESSAGE_DATA_TYPES, ERROR_TYPES } from '../constants.js';
+import RoomHandler from './roomHandler.js';
+
 
 export default class AdminDashboard {
 
@@ -8,7 +9,7 @@ export default class AdminDashboard {
 
     // Function to check if the authentication string is valid
     static isAuthValid (auth) {
-        return auth == "AWJD@#!KJASD!#MK" // ! This is just for testing
+        return auth == process.env.WADDLETALK_API_KEY;
     }
 
     // Function to send an authentication success message to the admin

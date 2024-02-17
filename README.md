@@ -1,3 +1,5 @@
+![WaddleTalk preview](https://github.com/EricSource-io/Random-Chatting-App/preview.png)
+
 # Random Chatting App
 
 This is a small project of mine - a random chatting app built in Flutter. The app connects users randomly, allowing them to chat and transfer images to each other. To address the potential issue of a single user being online with no one to chat with initially, I've implemented a temporary "chat_bridge."

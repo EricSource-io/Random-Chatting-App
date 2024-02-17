@@ -1,4 +1,4 @@
-![WaddleTalk preview](https://github.com/EricSource-io/Random-Chatting-App/preview.png)
+![WaddleTalk preview](https://github.com/EricSource-io/Random-Chatting-App/blob/main/preview.png)
 
 # Random Chatting App
 
